@@ -14,41 +14,41 @@ Easy dependency injection for swift, compatible with structs and classes.
 ```swift
 // 1
 protocol UserRepository {
-	func add(user: String) -> Int
+    func add(user: String) -> Int
 }
 
 // 2
 class DefaultUserRepository: UserRepository {
-	func add(user: String) -> Int {
-		return 1
-	}
+    func add(user: String) -> Int {
+        return 1
+    }
 }
 
 // "3"
 class DependencyInjection {
-	static let dependencies: DependencyResolver = DefaultDependencyResolver()
+    static let dependencies: DependencyResolver = DefaultDependencyResolver()
 }
 
 // 4. somewhere (like in your main / UIApplicationMain)
 DependencyInjection.dependencies.add(
-	UserRepository.self,
-	using: DefaultUserRepository() // autoclosure
+    UserRepository.self,
+    using: DefaultUserRepository() // autoclosure
 )
 
 // 5
 struct InjectedDependenciesExample {
 
-	@Inject(resolver: DependencyInjection.dependencies)
-	private var userRepository: UserRepository
+    @Inject(resolver: DependencyInjection.dependencies)
+    private var userRepository: UserRepository
 
-	init() {}
+    init() {}
 
-	init(
-		userRepository: UserRepository?
-	) {
-		// if you pass a non-nil `userRepository`, it will asign it to your local `self.userRepository`; else, it will use the injected dependency (don't forget the "$")
-		self.$userRepository = userRepository
-	}
+    init(
+        userRepository: UserRepository?
+    ) {
+        // if you pass a non-nil `userRepository`, it will asign it to your local `self.userRepository`; else, it will use the injected dependency (don't forget the "$")
+        self.$userRepository = userRepository
+    }
 }
 
 /* OK examples: */
@@ -65,25 +65,25 @@ let example3 = InjectedDependenciesExample(userRepository: OtherUserRepository()
 ### **TIP**: declare a default constructor extension for `@Inject` that uses your dependency injection
 ```swift
 extension Inject {
-	init() {
-		self.init(resolver: DependencyInjection.dependencies)
-	}
+    init() {
+        self.init(resolver: DependencyInjection.dependencies)
+    }
 }
 
 // Result :) niiice
 
 struct InjectedDependenciesExample {
 
-	@Inject()
-	private var userRepository: UserRepository
+    @Inject()
+    private var userRepository: UserRepository
 
-	init() {}
+    init() {}
 
-	init(
-		userRepository: UserRepository?
-	) {
-		self.$userRepository = userRepository
-	}
+    init(
+        userRepository: UserRepository?
+    ) {
+        self.$userRepository = userRepository
+    }
 }
 ```
 
@@ -95,48 +95,48 @@ struct InjectedDependenciesExample {
 // 1
 class FakeUserDefaultsManager {
 
-	init() {}
+    init() {}
 
-	var username: String {
-		get { "Daniel" }
-		set { /*...*/ }
-	}
-	// ...
+    var username: String {
+        get { "Daniel" }
+        set { /*...*/ }
+    }
+    // ...
 }
 
 // "2"
 class DependencyInjection {
-	static let singletons: SingletonResolver = DefaultSingletonResolver()
+    static let singletons: SingletonResolver = DefaultSingletonResolver()
 }
 
 // 3. somewhere (like in your main / UIApplicationMain)
 // you can also use a protocol and a value as with the previous example
 DependencyInjection.singletons.add(
-	FakeUserDefaultsManager() /* autoclosure */
+    FakeUserDefaultsManager() /* autoclosure */
 )
 
 extension InjectSingleton {
-	init() {
-		self.init(resolver: DependencyInjection.singletons)
-	}
+    init() {
+        self.init(resolver: DependencyInjection.singletons)
+    }
 }
 
 struct InjectedDependenciesExample2 {
 
-	@InjectSingleton()
-	private var userDefaults: FakeUserDefaultsManager
+    @InjectSingleton()
+    private var userDefaults: FakeUserDefaultsManager
 
-	// If you don't want to use `init` you can just use
-	@AutoWiredSingleton()
-	private var userDefaults: FakeUserDefaultsManager
+    // If you don't want to use `init` you can just use
+    @AutoWiredSingleton()
+    private var userDefaults: FakeUserDefaultsManager
 
-	init() {}
+    init() {}
 
-	init(
-		userDefaults: FakeUserDefaultsManager?
-	) {
-		self.$userDefaults = userDefaults
-	}
+    init(
+        userDefaults: FakeUserDefaultsManager?
+    ) {
+        self.$userDefaults = userDefaults
+    }
 }
 ```
 
