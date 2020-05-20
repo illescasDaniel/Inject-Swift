@@ -7,6 +7,9 @@
 
 public protocol DependencyResolver: Resolver {
 	
+	func add<T>(_ builder: @escaping () -> T)
+	func add<T>(_ builder: @autoclosure @escaping () -> T)
+	
 	func add<V, T>(_ type: T.Type, using builder: @escaping @autoclosure () -> V)
 	func add<V, T>(_ type: T.Type, using builder: @escaping () -> V)
 	
@@ -18,6 +21,10 @@ public protocol DependencyResolver: Resolver {
 	func removeAll()
 }
 public extension DependencyResolver {
+	
+	func add<T>(_ builder: @autoclosure @escaping () -> T) {
+		self.add(builder)
+	}
 	
 	func add<V, T>(_ type: T.Type, using builder: @escaping @autoclosure () -> V) {
 		self.add(type, using: builder)

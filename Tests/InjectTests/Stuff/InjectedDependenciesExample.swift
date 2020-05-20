@@ -13,6 +13,9 @@ struct InjectedDependenciesExample {
 	private var userRepository: UserRepository
 	
 	@AutoWired()
+	var imagesRepository: ImagesRepository
+	
+	@AutoWired()
 	private var wiredUserRepository: UserRepository
 	
 	@InjectSingleton()

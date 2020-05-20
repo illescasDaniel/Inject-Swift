@@ -14,6 +14,9 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: DefaultUserRepository() // autoclosure
 		)
+		
+		DependencyInjection.dependencies.add(ImagesRepository())
+		
 		DependencyInjection.singletons.add(
 			FakeUserDefaultsManager.self,
 			using: FakeOtherUserDefaultsManager()
@@ -92,6 +95,14 @@ final class InjectTests: XCTestCase {
 		
 		let something2 = InjectedDependenciesExample(userRepository: nil, userDefaults: nil)
 		XCTAssertEqual(something2.userDefaults0.username, "Daniel")
+	}
+	
+	func testUseInjectedDependencies5() {
+				
+		DependencyInjection.dependencies.add(ImagesRepository())
+		
+		let something = InjectedDependenciesExample(userRepository: nil, userDefaults: nil)
+		XCTAssertEqual(something.imagesRepository.getImage(id: ""), [1,2,3])
 	}
 	
 	func testInjectDependencies1() {
@@ -194,6 +205,7 @@ final class InjectTests: XCTestCase {
 		("testUseInjectedDependencies2", testUseInjectedDependencies2),
 		("testUseInjectedDependencies3", testUseInjectedDependencies3),
 		("testUseInjectedDependencies4", testUseInjectedDependencies4),
+		("testUseInjectedDependencies5", testUseInjectedDependencies5),
 		("testInjectDependencies1", testInjectDependencies1),
 		("testInjectDependencies2", testInjectDependencies2),
 		("testInjectDependencies3", testInjectDependencies3),
