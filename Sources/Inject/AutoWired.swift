@@ -8,15 +8,14 @@
 @propertyWrapper
 public struct AutoWired<T> {
 	
-	@Lazy
-	private var value: T
+	private let resolver: Resolver
 	
 	public init(resolver: Resolver) {
 		assert(resolver.isAdded(T.self))
-		self.$value = { resolver.resolve(T.self) }
+		self.resolver = resolver
 	}
 	
 	public var wrappedValue: T {
-		return value
+		return resolver.resolve(T.self)
 	}
 }

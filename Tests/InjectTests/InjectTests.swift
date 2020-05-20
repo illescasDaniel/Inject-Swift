@@ -14,6 +14,10 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: DefaultUserRepository() // autoclosure
 		)
+		DependencyInjection.singletons.add(
+			FakeUserDefaultsManager.self,
+			using: FakeOtherUserDefaultsManager()
+		)
 		DependencyInjection.singletons.addBox(FakeUserDefaultsManagerStruct())
 		DependencyInjection.singletons.add(FakeUserDefaultsManagerClass())
 	}

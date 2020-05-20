@@ -5,7 +5,8 @@ public struct Inject<T> {
 	private var value: T
 	
 	public init(resolver: Resolver) {
-		$value = { resolver.resolve(T.self) }
+		assert(resolver.isAdded(T.self))
+		$value = resolver.resolve
 	}
 	
 	public var wrappedValue: T {

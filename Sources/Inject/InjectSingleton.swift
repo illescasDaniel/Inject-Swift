@@ -8,11 +8,10 @@
 @propertyWrapper
 public struct InjectSingleton<T> {
 	
-	@Lazy
 	private var value: T
 	
 	public init(resolver: SingletonResolver) {
-		self.$value = { resolver.resolve(T.self) }
+		self.value = resolver.resolve(T.self)
 	}
 	
 	public var wrappedValue: T {

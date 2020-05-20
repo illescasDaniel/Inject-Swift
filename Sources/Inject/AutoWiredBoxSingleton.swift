@@ -8,18 +8,17 @@
 @propertyWrapper
 public struct AutoWiredBoxSingleton<T> {
 	
-	@Lazy
-	private var boxValue: Box<T>
+	private let resolver: SingletonResolver
 	
 	public init(resolver: SingletonResolver) {
 		assert(resolver.isAddedBox(T.self))
-		self.$boxValue = { resolver.resolveBox(T.self) }
+		self.resolver = resolver
 	}
 	
 	public var wrappedValue: T {
-		get { boxValue.value }
+		get { resolver.resolveBox(T.self).value }
 		set {
-			boxValue.value = newValue
+			resolver.resolveBox(T.self).value = newValue
 		}
 	}
 }
