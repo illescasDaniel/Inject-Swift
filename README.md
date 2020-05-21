@@ -166,6 +166,4 @@ Actually... you only need to create the dependency injection class and the Injec
 
 No, until you use the value, it is not retrieved from the dependencies container.
 
-Same happends with singletons\*. The 'singleton resolver' stores the singleton **as a function** until is first called, then it stores its reference value.
-
-\* Not true **if** you use this method `add<V, T>(_ type: T.Type, using builder: @escaping () -> V)`, because for some reason I can't cast a function to a generic one `value as? (() -> Any)`.
+Same happends with singletons. The 'singleton resolver' stores the singleton **as a function** until is first called, then it stores its reference value.

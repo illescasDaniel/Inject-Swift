@@ -19,6 +19,10 @@ internal class Lazy<T> {
 		self.builder = builder
 	}
 	
+	init(builder: @escaping () -> T) {
+		self.builder = builder
+	}
+	
 	init() {
 		
 	}

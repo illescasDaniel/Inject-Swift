@@ -7,52 +7,36 @@
 
 open class DefaultSingletonResolver: SingletonResolver {
 	
-	private var singletons: [ObjectIdentifier: Any] = [:] // TODO: use Box for structs
+	private var singletons: [ObjectIdentifier: Lazy<Any>] = [:]
 	
 	public init() {}
 	
 	open func add<T: AnyObject>(_ builder: @escaping () -> T) {
-		singletons[ObjectIdentifier(T.self)] = builder
+		singletons[ObjectIdentifier(T.self)] = .init(builder: builder)
 	}
 	
 	open func add<V, T>(_ type: T.Type, using builder: @escaping () -> V) {
 		if !(V.self is T.Type) { fatalError("\(V.self) is required to implement \(T.self).") }
-		singletons[ObjectIdentifier(type)] = builder() // TODO: we should avoid this when possible, but I can't cast a function to () -> Any...
+		singletons[ObjectIdentifier(type)] = .init(builder: builder) // TODO: we should avoid this when possible, but I can't cast a function to () -> Any...
 	}
 	
 	open func addBox<T>(_ builder: @escaping () -> T) {
-		singletons[ObjectIdentifier(Box<T>.self)] = {
-			return Box(builder())
-		}
+		singletons[ObjectIdentifier(Box<T>.self)] = .init(builder: { Box(builder()) })
 	}
 	
 	open func resolve<T>() -> T {
-		
-		if let valueBuilder = singletons[ObjectIdentifier(T.self)] as? (() -> T) {
-			let resolvedValue = valueBuilder()
-			singletons[ObjectIdentifier(T.self)] = resolvedValue
-			return resolvedValue
+		if let resolvedValue: Lazy<Any> = self.singletons[ObjectIdentifier(T.self)],
+		   let wrappedValue = resolvedValue.wrappedValue as? T {
+			return wrappedValue
 		}
-		
-		if let value = singletons[ObjectIdentifier(T.self)] as? T {
-			return value
-		}
-		
 		fatalError("You need to add \(T.self) to the dependency resolver")
 	}
 	
 	open func resolveBox<T>() -> Box<T> {
-		
-		if let valueBuilder = singletons[ObjectIdentifier(Box<T>.self)] as? (() -> Box<T>) {
-			let resolvedValue = valueBuilder()
-			singletons[ObjectIdentifier(Box<T>.self)] = resolvedValue
-			return resolvedValue
+		if let resolvedValue: Lazy<Any> = self.singletons[ObjectIdentifier(Box<T>.self)],
+		   let wrappedValue = resolvedValue.wrappedValue as? Box<T> {
+			return wrappedValue
 		}
-		
-		if let value = singletons[ObjectIdentifier(Box<T>.self)] as? Box<T> {
-			return value
-		}
-		
 		fatalError("You need to add \(T.self) to the dependency resolver")
 	}
 	
