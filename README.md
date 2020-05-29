@@ -89,8 +89,6 @@ struct InjectedDependenciesExample {
 
 ## Singleton example
 
-
-
 ```swift
 // 1
 class FakeUserDefaultsManager {
@@ -102,6 +100,8 @@ class FakeUserDefaultsManager {
         set { /*...*/ }
     }
     // ...
+    
+    // no need for `static var shared`!! :)
 }
 
 // "2"
@@ -147,9 +147,13 @@ No, you can just do `DependencyInjection.dependencies.resolve(YourTypeHere.self)
 
 > 2 - How can I use it with structs? Should I?
 
-Good question, you can if you want. If you want you can use `DependencyInjection.singletons.addBox(...)` with a struct value, it will behave as a class because of the `Box` type (which encloses a type inside a class).
+Good question, you can if you want.
+**Using structs in your normal dependencies should be OK** (unless you use some shared code in that struct or something), because the resolver will just store a function that returns a value.
 
-You will also want to use `AutoWiredBoxSingleton`:
+But you should not use structs directly in your singleton dependencies (because you want to use the same values across your program) unless wrapped by a class (like the `Box<T>` class provided in this library) or if added like this:
+`DependencyInjection.singletons.addBox(...)` . When you later use `@InjectSingleton` you should declare a local variable like `Box<MyStructSingleton>`, this will behave as a class because of the `Box` type (which encloses a type inside a class).
+
+You can also use `AutoWiredBoxSingleton` for these case:
 ```swift
 @AutoWiredBoxSingleton()
 var userDefaultsStruct: FakeUserDefaultsManagerStruct
@@ -167,3 +171,9 @@ Actually... you only need to create the dependency injection class and the Injec
 No, until you use the value, it is not retrieved from the dependencies container.
 
 Same happends with singletons. The 'singleton resolver' stores the singleton **as a function** until is first called, then it stores its reference value.
+
+> 4 - Do I need a library like this for simple dependencies on my small app?
+
+Probably not, but you might consider using it if your app grows or if you just like the way of handling dependencies.
+
+**I wrote about it in my article at medium**: https://itnext.io/9aa1015d8342
