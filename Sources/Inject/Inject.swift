@@ -5,7 +5,7 @@ public struct Inject<T> {
 	private var value: T
 	
 	public init(resolver: Resolver) {
-		assert(resolver.isAdded(T.self))
+		assert(resolver.isAdded(T.self), "No dependency for: \(T.self)")
 		$value = resolver.resolve
 	}
 	

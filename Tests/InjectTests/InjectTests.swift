@@ -25,7 +25,7 @@ final class InjectTests: XCTestCase {
 		DependencyInjection.singletons.add(FakeUserDefaultsManagerClass())
 	}
 	
-    func testRegisterDependency() {
+	func testRegisterDependency() {
 		DependencyInjection.dependencies.add(
 			UserRepository.self,
 			using: DefaultUserRepository() // autoclosure
@@ -33,7 +33,7 @@ final class InjectTests: XCTestCase {
 		
 		let userRepository: UserRepository = DependencyInjection.dependencies.resolve()
 		XCTAssertEqual(userRepository.add(user: "a"), 1)
-    }
+	}
 	
 	func testRegisterDependency2() {
 		DependencyInjection.dependencies.add(
@@ -79,7 +79,7 @@ final class InjectTests: XCTestCase {
 	}
 	
 	func testUseInjectedDependencies4() {
-				
+		
 		DependencyInjection.singletons.add(
 			FakeUserDefaultsManager.self,
 			using: FakeOtherUserDefaultsManager()
@@ -98,7 +98,7 @@ final class InjectTests: XCTestCase {
 	}
 	
 	func testUseInjectedDependencies5() {
-				
+		
 		DependencyInjection.dependencies.add(ImagesRepository())
 		
 		let something = InjectedDependenciesExample(userRepository: nil, userDefaults: nil)
@@ -164,20 +164,20 @@ final class InjectTests: XCTestCase {
 	
 	func testSingletonReferenceValue1() {
 		DependencyInjection.singletons.add(FakeUserDefaultsManagerClass())
-
+		
 		let something = InjectedDependenciesExample()
 		something.userDefaults.aValue = 10
-
+		
 		let something2 = InjectedDependenciesExample()
 		XCTAssertEqual(something2.userDefaults.aValue, 10)
 	}
 	
 	func testSingletonReferenceValue2() {
 		DependencyInjection.singletons.add(Box(FakeUserDefaultsManagerStruct()))
-
+		
 		let something = InjectedDependenciesExample()
 		something.userDefaultsStruct.value.aValue = 12
-
+		
 		let something2 = InjectedDependenciesExample()
 		XCTAssertEqual(something2.userDefaultsStruct.value.aValue, 12)
 		
@@ -187,19 +187,19 @@ final class InjectTests: XCTestCase {
 	
 	func testSingletonReferenceValue3() {
 		DependencyInjection.singletons.addBox(FakeUserDefaultsManagerStruct())
-
+		
 		var something = InjectedDependenciesExample()
 		something.userDefaultsStruct2.aValue = 12
-
+		
 		var something2 = InjectedDependenciesExample()
 		XCTAssertEqual(something2.userDefaultsStruct2.aValue, 12)
 		
 		something2.userDefaultsStruct2.aValue = 20
 		XCTAssertEqual(something.userDefaultsStruct2.aValue, 20)
 	}
-
-    static var allTests = [
-        ("testRegisterDependency", testRegisterDependency),
+	
+	static var allTests = [
+		("testRegisterDependency", testRegisterDependency),
 		("testRegisterDependency2", testRegisterDependency2),
 		("testUseInjectedDependencies1", testUseInjectedDependencies1),
 		("testUseInjectedDependencies2", testUseInjectedDependencies2),
@@ -215,5 +215,5 @@ final class InjectTests: XCTestCase {
 		("testSingletonReferenceValue1", testSingletonReferenceValue1),
 		("testSingletonReferenceValue2", testSingletonReferenceValue2),
 		("testSingletonReferenceValue3", testSingletonReferenceValue3)
-    ]
+	]
 }

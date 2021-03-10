@@ -11,7 +11,7 @@ public struct AutoWiredBoxSingleton<T> {
 	private let resolver: SingletonResolver
 	
 	public init(resolver: SingletonResolver) {
-		assert(resolver.isAddedBox(T.self))
+		assert(resolver.isAddedBox(T.self), "No dependency for: \(T.self)")
 		self.resolver = resolver
 	}
 	
