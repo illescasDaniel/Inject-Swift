@@ -30,6 +30,7 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: DefaultUserRepository() // autoclosure
 		)
+		XCTAssertTrue(DependencyInjection.dependencies.isAdded(UserRepository.self))
 		
 		let userRepository: UserRepository = DependencyInjection.dependencies.resolve()
 		XCTAssertEqual(userRepository.add(user: "a"), 1)
@@ -40,6 +41,7 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: OtherUserRepository()
 		)
+		XCTAssertTrue(DependencyInjection.dependencies.isAdded(UserRepository.self))
 		
 		let userRepository2: UserRepository = DependencyInjection.dependencies.resolve()
 		XCTAssertEqual(userRepository2.add(user: "a"), 0)
@@ -50,6 +52,8 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: DefaultUserRepository()
 		)
+		XCTAssertTrue(DependencyInjection.dependencies.isAdded(UserRepository.self))
+		
 		// picks up the injected value if any
 		let something = InjectedDependenciesExample(userRepository: nil, userDefaults: nil)
 		XCTAssertEqual(something.add(user: "a"), 1)
@@ -60,6 +64,7 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: OtherUserRepository()
 		)
+		XCTAssertTrue(DependencyInjection.dependencies.isAdded(UserRepository.self))
 		
 		let something = InjectedDependenciesExample(userRepository: nil, userDefaults: nil)
 		XCTAssertEqual(something.add(user: "a"), 0)
@@ -84,14 +89,17 @@ final class InjectTests: XCTestCase {
 			FakeUserDefaultsManager.self,
 			using: FakeOtherUserDefaultsManager()
 		)
+		XCTAssertTrue(DependencyInjection.singletons.isAdded(FakeUserDefaultsManager.self))
 		
 		let something = InjectedDependenciesExample(userRepository: nil, userDefaults: nil)
 		XCTAssertEqual(something.userDefaults0.username, "John")
 		
+		// this replaces the previous dependency value
 		DependencyInjection.singletons.add(
 			FakeUserDefaultsManager.self,
 			using: FakeUserDefaultsManagerClass()
 		)
+		XCTAssertTrue(DependencyInjection.singletons.isAdded(FakeUserDefaultsManager.self))
 		
 		let something2 = InjectedDependenciesExample(userRepository: nil, userDefaults: nil)
 		XCTAssertEqual(something2.userDefaults0.username, "Daniel")
@@ -100,6 +108,7 @@ final class InjectTests: XCTestCase {
 	func testUseInjectedDependencies5() {
 		
 		DependencyInjection.dependencies.add(ImagesRepository())
+		XCTAssertTrue(DependencyInjection.dependencies.isAdded(ImagesRepository.self))
 		
 		let something = InjectedDependenciesExample(userRepository: nil, userDefaults: nil)
 		XCTAssertEqual(something.imagesRepository.getImage(id: ""), [1,2,3])
@@ -110,6 +119,8 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: DefaultUserRepository()
 		)
+		XCTAssertTrue(DependencyInjection.dependencies.isAdded(UserRepository.self))
+		
 		// overrides injected value
 		let something = InjectedDependenciesExample(userRepository: OtherUserRepository(), userDefaults: nil)
 		XCTAssertEqual(something.add(user: "a"), 0)
@@ -120,6 +131,8 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: OtherUserRepository()
 		)
+		XCTAssertTrue(DependencyInjection.dependencies.isAdded(UserRepository.self))
+		
 		// overrides injected value
 		let something = InjectedDependenciesExample(userRepository: DefaultUserRepository(), userDefaults: nil)
 		XCTAssertEqual(something.add(user: "a"), 1)
@@ -130,6 +143,8 @@ final class InjectTests: XCTestCase {
 			FakeUserDefaultsManager.self,
 			using: FakeOtherUserDefaultsManager()
 		)
+		XCTAssertTrue(DependencyInjection.singletons.isAdded(FakeUserDefaultsManager.self))
+		
 		// overrides injected value
 		let something = InjectedDependenciesExample(userRepository: nil, userDefaults: FakeUserDefaultsManagerClass())
 		XCTAssertEqual(something.username(), "Daniel")
@@ -140,6 +155,7 @@ final class InjectTests: XCTestCase {
 			UserRepository.self,
 			using: OtherUserRepository()
 		)
+		XCTAssertTrue(DependencyInjection.dependencies.isAdded(UserRepository.self))
 		
 		let something = InjectedDependenciesExample()
 		XCTAssertEqual(something.autoWired_add(user: "a"), 0)
@@ -147,6 +163,7 @@ final class InjectTests: XCTestCase {
 	
 	func testAutoWiredDependenciesSingleton() {
 		DependencyInjection.singletons.add(FakeUserDefaultsManagerClass())
+		XCTAssertTrue(DependencyInjection.singletons.isAdded(FakeUserDefaultsManagerClass.self))
 		
 		let something = InjectedDependenciesExample()
 		XCTAssertEqual(something.username(), "Daniel")
@@ -154,6 +171,7 @@ final class InjectTests: XCTestCase {
 	
 	func testSingleton() {
 		DependencyInjection.singletons.add(FakeUserDefaultsManagerClass())
+		XCTAssertTrue(DependencyInjection.singletons.isAdded(FakeUserDefaultsManagerClass.self))
 		
 		let fakeUserDefaults = DependencyInjection.singletons.resolve(FakeUserDefaultsManagerClass.self)
 		XCTAssertEqual(fakeUserDefaults.username, "Daniel")
@@ -164,6 +182,7 @@ final class InjectTests: XCTestCase {
 	
 	func testSingletonReferenceValue1() {
 		DependencyInjection.singletons.add(FakeUserDefaultsManagerClass())
+		XCTAssertTrue(DependencyInjection.singletons.isAdded(FakeUserDefaultsManagerClass.self))
 		
 		let something = InjectedDependenciesExample()
 		something.userDefaults.aValue = 10
@@ -174,6 +193,7 @@ final class InjectTests: XCTestCase {
 	
 	func testSingletonReferenceValue2() {
 		DependencyInjection.singletons.add(Box(FakeUserDefaultsManagerStruct()))
+		XCTAssertTrue(DependencyInjection.singletons.isAdded(Box<FakeUserDefaultsManagerStruct>.self))
 		
 		let something = InjectedDependenciesExample()
 		something.userDefaultsStruct.value.aValue = 12
@@ -187,6 +207,7 @@ final class InjectTests: XCTestCase {
 	
 	func testSingletonReferenceValue3() {
 		DependencyInjection.singletons.addBox(FakeUserDefaultsManagerStruct())
+		XCTAssertTrue(DependencyInjection.singletons.isAdded(Box<FakeUserDefaultsManagerStruct>.self))
 		
 		var something = InjectedDependenciesExample()
 		something.userDefaultsStruct2.aValue = 12

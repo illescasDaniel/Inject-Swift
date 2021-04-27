@@ -16,7 +16,7 @@ open class DefaultSingletonResolver: SingletonResolver {
 	}
 	
 	open func add<V, T>(_ type: T.Type, using builder: @escaping () -> V) {
-		singletons[ObjectIdentifier(type)] = .init(builder: builder) // TODO: we should avoid this when possible, but I can't cast a function to () -> Any...
+		singletons[ObjectIdentifier(T.self)] = .init(builder: builder)
 	}
 	
 	open func addBox<T>(_ builder: @escaping () -> T) {
@@ -40,7 +40,7 @@ open class DefaultSingletonResolver: SingletonResolver {
 	}
 	
 	open func remove<T>(_ type: T.Type) {
-		singletons.removeValue(forKey: ObjectIdentifier(type))
+		singletons.removeValue(forKey: ObjectIdentifier(T.self))
 	}
 	
 	open func removeAll() {
@@ -48,7 +48,7 @@ open class DefaultSingletonResolver: SingletonResolver {
 	}
 	
 	open func isAdded<T>(_ type: T.Type) -> Bool {
-		return self.singletons.keys.contains(ObjectIdentifier(type))
+		return self.singletons.keys.contains(ObjectIdentifier(T.self))
 	}
 	
 	open func isAddedBox<T>(_ type: T.Type) -> Bool {

@@ -15,6 +15,8 @@ final class NestedDependenciesTests: XCTestCase {
 			CarRepository.self,
 			using: DefaultCarRepository(
 				database: DependencyInjection.dependencies.resolve(Database.self)
+				// this is also valid in this case:
+//				database: nil // here "nil" means "I don't want to pass a specific database object, just use the one from DependencyInjection"
 			)
 		)
 	}
@@ -24,7 +26,7 @@ final class NestedDependenciesTests: XCTestCase {
 		XCTAssertEqual(nestedDependencies.fetchCar(id: 1).brand, "Toyot4")
 	}
 
-    static var allTests = [
-        ("testNestedDependencies", testNestedDependencies),
-    ]
+	static var allTests = [
+		("testNestedDependencies", testNestedDependencies),
+	]
 }

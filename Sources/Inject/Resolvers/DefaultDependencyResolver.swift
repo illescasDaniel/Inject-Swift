@@ -16,7 +16,7 @@ open class DefaultDependencyResolver: DependencyResolver {
 	}
 	
 	open func add<V, T>(_ type: T.Type, using builder: @escaping () -> V) {
-		dependencies[ObjectIdentifier(type)] = builder
+		dependencies[ObjectIdentifier(T.self)] = builder
 	}
 
 	open func resolve<T>() -> T {
@@ -27,7 +27,7 @@ open class DefaultDependencyResolver: DependencyResolver {
 	}
 	
 	open func remove<T>(_ type: T.Type) {
-		dependencies.removeValue(forKey: ObjectIdentifier(type))
+		dependencies.removeValue(forKey: ObjectIdentifier(T.self))
 	}
 	
 	open func removeAll() {
@@ -35,6 +35,6 @@ open class DefaultDependencyResolver: DependencyResolver {
 	}
 	
 	open func isAdded<T>(_ type: T.Type) -> Bool {
-		return self.dependencies.keys.contains(ObjectIdentifier(type))
+		return self.dependencies.keys.contains(ObjectIdentifier(T.self))
 	}
 }
