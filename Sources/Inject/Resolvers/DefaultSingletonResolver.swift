@@ -16,7 +16,6 @@ open class DefaultSingletonResolver: SingletonResolver {
 	}
 	
 	open func add<V, T>(_ type: T.Type, using builder: @escaping () -> V) {
-		if !(V.self is T.Type) { fatalError("\(V.self) is required to implement \(T.self).") }
 		singletons[ObjectIdentifier(type)] = .init(builder: builder) // TODO: we should avoid this when possible, but I can't cast a function to () -> Any...
 	}
 	

@@ -16,7 +16,6 @@ open class DefaultDependencyResolver: DependencyResolver {
 	}
 	
 	open func add<V, T>(_ type: T.Type, using builder: @escaping () -> V) {
-		if !(V.self is T.Type) { fatalError("\(V.self) is required to implement \(T.self).") }
 		dependencies[ObjectIdentifier(type)] = builder
 	}
 
