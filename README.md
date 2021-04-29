@@ -29,7 +29,7 @@ class DependencyInjection {
     static let dependencies: DependencyResolver = DefaultDependencyResolver()
 }
 
-// 4. somewhere (like in your main / UIApplicationMain)
+// 4. somewhere (like in your main / AppDelegate)
 DependencyInjection.dependencies.add(
     UserRepository.self,
     using: DefaultUserRepository() // autoclosure
@@ -101,7 +101,7 @@ class FakeUserDefaultsManager {
     }
     // ...
     
-    // no need for `static var shared`!! :)
+    // no need for a static variable here, since we'll use the resolver
 }
 
 // "2"
