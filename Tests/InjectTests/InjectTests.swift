@@ -1,5 +1,5 @@
 import XCTest
-@testable import Inject
+import Inject
 
 final class InjectTests: XCTestCase {
 	
