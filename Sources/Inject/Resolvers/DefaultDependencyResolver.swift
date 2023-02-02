@@ -11,11 +11,7 @@ open class DefaultDependencyResolver: DependencyResolver {
 	
 	public init() {}
 	
-	open func add<T>(_ builder: @escaping () -> T) {
-		dependencies[ObjectIdentifier(T.self)] = builder
-	}
-	
-	open func add<V, T>(_ type: T.Type, using builder: @escaping () -> V) {
+	open func add<T>(_ type: T.Type = T.self, using builder: @escaping () -> T) {
 		dependencies[ObjectIdentifier(T.self)] = builder
 	}
 

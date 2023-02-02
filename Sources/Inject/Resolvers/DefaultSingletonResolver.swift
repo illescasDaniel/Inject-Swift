@@ -11,21 +11,18 @@ open class DefaultSingletonResolver: SingletonResolver {
 	
 	public init() {}
 	
-	open func add<T: AnyObject>(_ builder: @escaping () -> T) {
+	open func add<T>(_ type: T.Type = T.self, using builder: @escaping () -> T) {
 		singletons[ObjectIdentifier(T.self)] = .init(builder: builder)
 	}
 	
-	open func add<V, T>(_ type: T.Type, using builder: @escaping () -> V) {
-		singletons[ObjectIdentifier(T.self)] = .init(builder: builder)
-	}
-	
-	open func addBox<T>(_ builder: @escaping () -> T) {
+	open func addBox<T>(_ type: T.Type = T.self, using builder: @escaping () -> T) {
 		singletons[ObjectIdentifier(Box<T>.self)] = .init(builder: { Box(builder()) })
 	}
 	
 	open func resolve<T>() -> T {
 		if let resolvedValue: Lazy<Any> = self.singletons[ObjectIdentifier(T.self)],
-		   let wrappedValue = resolvedValue.wrappedValue as? T {
+		   let wrappedValue = resolvedValue.wrappedValue as? T
+		{
 			return wrappedValue
 		}
 		fatalError("You need to add \(T.self) to the dependency resolver")
@@ -33,7 +30,8 @@ open class DefaultSingletonResolver: SingletonResolver {
 	
 	open func resolveBox<T>() -> Box<T> {
 		if let resolvedValue: Lazy<Any> = self.singletons[ObjectIdentifier(Box<T>.self)],
-		   let wrappedValue = resolvedValue.wrappedValue as? Box<T> {
+		   let wrappedValue = resolvedValue.wrappedValue as? Box<T>
+		{
 			return wrappedValue
 		}
 		fatalError("You need to add \(T.self) to the dependency resolver")

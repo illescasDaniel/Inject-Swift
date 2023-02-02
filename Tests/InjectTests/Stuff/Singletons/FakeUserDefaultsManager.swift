@@ -5,8 +5,22 @@
 //  Created by Daniel Illescas Romero on 19/05/2020.
 //
 
-protocol FakeUserDefaultsManager {
+protocol FakeUserDefaultsManager: AnyObject {
 	var username: String { get }
+}
+
+protocol FakeUserDefaultsManager2 {
+	var username: String { get set }
+}
+
+struct FakeUserDefaultsManagerStruct2: FakeUserDefaultsManager2 {
+
+	var aValue: Int = 3
+
+	init() {}
+
+	var username: String = ""
+	// ...
 }
 
 struct FakeUserDefaultsManagerStruct {

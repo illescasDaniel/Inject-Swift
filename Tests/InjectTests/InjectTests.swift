@@ -21,6 +21,7 @@ final class InjectTests: XCTestCase {
 			FakeUserDefaultsManager.self,
 			using: FakeOtherUserDefaultsManager()
 		)
+
 		DependencyInjection.singletons.addBox(FakeUserDefaultsManagerStruct())
 		DependencyInjection.singletons.add(FakeUserDefaultsManagerClass())
 	}
@@ -35,7 +36,7 @@ final class InjectTests: XCTestCase {
 		let userRepository: UserRepository = DependencyInjection.dependencies.resolve()
 		XCTAssertEqual(userRepository.add(user: "a"), 1)
 	}
-	
+
 	func testRegisterDependency2() {
 		DependencyInjection.dependencies.add(
 			UserRepository.self,
@@ -217,6 +218,63 @@ final class InjectTests: XCTestCase {
 		
 		something2.userDefaultsStruct2.aValue = 20
 		XCTAssertEqual(something.userDefaultsStruct2.aValue, 20)
+	}
+
+	func testSingleton1() {
+		DependencyInjection.singletons.add(
+			FakeUserDefaultsManager2.self,
+			using: { FakeUserDefaultsManagerStruct2() }
+		)
+		var something: FakeUserDefaultsManager2 = DependencyInjection.singletons.resolve()
+		something.username = "hello"
+		XCTAssertEqual(something.username, "hello")
+
+		let something2: FakeUserDefaultsManager2 = DependencyInjection.singletons.resolve()
+		XCTAssertNotEqual(something2.username, "hello")
+	}
+
+	func testSingleton11() {
+		DependencyInjection.singletons.add(
+			FakeUserDefaultsManager2.self,
+			using: FakeUserDefaultsManagerStruct2()
+		)
+		var something: FakeUserDefaultsManager2 = DependencyInjection.singletons.resolve()
+		something.username = "hello"
+		XCTAssertEqual(something.username, "hello")
+
+		let something2: FakeUserDefaultsManager2 = DependencyInjection.singletons.resolve()
+		XCTAssertNotEqual(something2.username, "hello")
+	}
+
+	func testSingleton2() {
+		DependencyInjection.singletons.addBox(
+			FakeUserDefaultsManager2.self,
+			using: { FakeUserDefaultsManagerStruct2() }
+		)
+		let something = DependencyInjection.singletons.resolveBox(FakeUserDefaultsManager2.self)
+		something.username = "hello"
+		XCTAssertEqual(something.username, "hello")
+
+		let something2 = DependencyInjection.singletons.resolveBox(FakeUserDefaultsManager2.self)
+		XCTAssertEqual(something2.username, "hello")
+		something2.username = "bye"
+		XCTAssertEqual(something2.username, "bye")
+	}
+
+	func testSingleton3() {
+		DependencyInjection.singletons.addBox(
+			FakeUserDefaultsManager2.self,
+			using: FakeUserDefaultsManagerStruct2()
+		)
+
+		let something = DependencyInjection.singletons.resolveBox(FakeUserDefaultsManager2.self)
+		something.username = "hello"
+		XCTAssertEqual(something.username, "hello")
+
+		let something2 = DependencyInjection.singletons.resolveBox(FakeUserDefaultsManager2.self)
+		XCTAssertEqual(something2.username, "hello")
+		something2.username = "bye"
+		XCTAssertEqual(something2.username, "bye")
 	}
 	
 	static var allTests = [

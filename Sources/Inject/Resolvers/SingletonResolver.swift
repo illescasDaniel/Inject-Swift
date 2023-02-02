@@ -9,12 +9,16 @@ public protocol SingletonResolver: Resolver {
 	
 	func add<T: AnyObject>(_ builder: @escaping () -> T)
 	func add<T: AnyObject>(_ builder: @autoclosure @escaping () -> T)
-	
-	func add<V, T>(_ type: T.Type, using builder: @escaping () -> V)
-	func add<V, T>(_ type: T.Type, using builder: @autoclosure @escaping () -> V)
+
+	// these should be T: AnyObject
+	func add<T>(_ type: T.Type, using builder: @escaping () -> T)
+	func add<T>(_ type: T.Type, using builder: @autoclosure @escaping () -> T)
 	
 	func addBox<T>(_ builder: @escaping () -> T)
 	func addBox<T>(_ builder: @autoclosure @escaping () -> T)
+
+	func addBox<T>(_ type: T.Type, using builder: @escaping () -> T)
+	func addBox<T>(_ type: T.Type, using builder: @autoclosure @escaping () -> T)
 	
 	func resolve<T>() -> T
 	func resolve<T>(_ type: T.Type) -> T
@@ -30,15 +34,19 @@ public protocol SingletonResolver: Resolver {
 public extension SingletonResolver {
 	
 	func add<T: AnyObject>(_ builder: @autoclosure @escaping () -> T) {
-		self.add(builder)
+		self.add(T.self, using: builder)
 	}
 	
-	func add<V, T>(_ type: T.Type, using builder: @autoclosure @escaping () -> V) {
+	func add<T: AnyObject>(_ type: T.Type, using builder: @autoclosure @escaping () -> T) {
 		self.add(type, using: builder)
+	}
+
+	func addBox<T>(_ type: T.Type, using builder: @autoclosure @escaping () -> T) {
+		self.addBox(type, using: builder)
 	}
 	
 	func addBox<T>(_ builder: @autoclosure @escaping () -> T) {
-		self.addBox(builder)
+		self.addBox(T.self, using: builder)
 	}
 	
 	func resolve<T>(_ type: T.Type) -> T {

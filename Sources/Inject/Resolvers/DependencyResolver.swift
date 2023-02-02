@@ -10,8 +10,8 @@ public protocol DependencyResolver: Resolver {
 	func add<T>(_ builder: @escaping () -> T)
 	func add<T>(_ builder: @autoclosure @escaping () -> T)
 	
-	func add<V, T>(_ type: T.Type, using builder: @escaping @autoclosure () -> V)
-	func add<V, T>(_ type: T.Type, using builder: @escaping () -> V)
+	func add<T>(_ type: T.Type, using builder: @escaping @autoclosure () -> T)
+	func add<T>(_ type: T.Type, using builder: @escaping () -> T)
 	
 	func resolve<T>(_ type: T.Type) -> T
 	func resolve<T>() -> T
@@ -23,14 +23,14 @@ public protocol DependencyResolver: Resolver {
 public extension DependencyResolver {
 	
 	func add<T>(_ builder: @autoclosure @escaping () -> T) {
-		self.add(builder)
+		self.add(T.self, using: builder)
 	}
 	
-	func add<V, T>(_ type: T.Type, using builder: @escaping @autoclosure () -> V) {
+	func add<T>(_ type: T.Type, using builder: @escaping @autoclosure () -> T) {
 		self.add(type, using: builder)
 	}
 	
 	func resolve<T>(_ type: T.Type) -> T {
-		self.resolve()
+		return self.resolve()
 	}
 }
