@@ -7,48 +7,16 @@
 
 @propertyWrapper
 internal class Lazy<T> {
-	
-	private var value: T!
-	private var builder: (() -> T)!
-	
-	init(_ builder: @autoclosure @escaping () -> T) {
+
+	private var builder: (() -> T)
+	private lazy var value: T = self.builder()
+
+	internal init(builder: @escaping () -> T) {
 		self.builder = builder
 	}
-	
-	init(_ builder: @escaping () -> T) {
-		self.builder = builder
-	}
-	
-	init(builder: @escaping () -> T) {
-		self.builder = builder
-	}
-	
-	init() {
-		
-	}
-	
-	public var wrappedValue: T {
-		get {
-			if let validValue = self.value {
-				return validValue
-			} else {
-				if let valueBuilder = self.builder {
-					self.value = valueBuilder()
-					return self.value
-				} else {
-					fatalError("Missing value builder for Lazy<\(T.self)>")
-				}
-			}
-		}
+
+	internal var wrappedValue: T {
+		get { self.value }
 		set { value = newValue }
-	}
-	
-	public var projectedValue: (() -> T)? {
-		get { builder }
-		set {
-			if let newBuilder = newValue {
-				self.builder = newBuilder
-			}
-		}
 	}
 }

@@ -6,7 +6,7 @@ public struct Inject<T> {
 	
 	public init(resolver: Resolver) {
 		assert(resolver.isAdded(T.self), "No dependency for: \(T.self)")
-		$value = resolver.resolve
+		self._value = Lazy<T>(builder: resolver.resolve)
 	}
 	
 	public var wrappedValue: T {
