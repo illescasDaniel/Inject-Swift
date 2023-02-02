@@ -10,7 +10,7 @@ public struct AutoWired<T> {
 	
 	private let resolver: Resolver
 	
-	public init(resolver: Resolver) {
+	public init(resolver: DependencyResolver) {
 		assert(resolver.isAdded(T.self), "No dependency for: \(T.self)")
 		self.resolver = resolver
 	}

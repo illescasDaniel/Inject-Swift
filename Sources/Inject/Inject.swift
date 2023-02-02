@@ -4,7 +4,7 @@ public struct Inject<T> {
 	@Lazy
 	private var value: T
 	
-	public init(resolver: Resolver) {
+	public init(resolver: DependencyResolver) {
 		assert(resolver.isAdded(T.self), "No dependency for: \(T.self)")
 		self._value = Lazy<T>(builder: resolver.resolve)
 	}

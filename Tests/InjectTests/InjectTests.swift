@@ -293,6 +293,10 @@ final class InjectTests: XCTestCase {
 		("testSingleton", testSingleton),
 		("testSingletonReferenceValue1", testSingletonReferenceValue1),
 		("testSingletonReferenceValue2", testSingletonReferenceValue2),
-		("testSingletonReferenceValue3", testSingletonReferenceValue3)
+		("testSingletonReferenceValue3", testSingletonReferenceValue3),
+		("testSingleton1", testSingleton1),
+		("testSingleton11", testSingleton11),
+		("testSingleton2", testSingleton2),
+		("testSingleton3", testSingleton3)
 	]
 }
